@@ -7,13 +7,21 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const url = searchParams.get('url') || ''
+  const mode = searchParams.get('mode') || ''
+
+  if (!url) {
+    return NextResponse.json({ rows: [], error: 'URL is required' }, { status: 400 })
+  }
 
   // 開発時はローカルの worker extract-api を叩く
-  // worker側で pnpm --filter @osikatsu-pro/worker extract-api を実行しておく
-  const workerUrl = process.env.WORKER_EXTRACT_API || 'http://localhost:8081'
+  const workerUrl = process.env.WORKER_BASE_URL || 'http://localhost:8080'
 
   try {
-    const res = await fetch(`${workerUrl}/extract?url=${encodeURIComponent(url)}`)
+    const query = new URLSearchParams({ url })
+    if (mode) {
+      query.set('mode', mode)
+    }
+    const res = await fetch(`${workerUrl}/extract?${query.toString()}`)
     const data = await res.json()
     return NextResponse.json(data)
   } catch (error) {

@@ -3,7 +3,7 @@ import robotsParser from 'robots-parser';
 import { chromium } from 'playwright';
 
 const UA = process.env.USER_AGENT || 'AndFanFanBot/1.0';
-const TIMEOUT = Number(process.env.REQUEST_TIMEOUT_MS || '45000');
+const TIMEOUT = Number(process.env.REQUEST_TIMEOUT_MS || '60000'); // 60秒に延長
 const RESPECT = (process.env.RESPECT_ROBOTS_TXT || 'true') === 'true';
 const MAX_REQUESTS_PER_HOST_PER_MIN = Number(process.env.MAX_REQUESTS_PER_HOST_PER_MIN || '6');
 
@@ -57,10 +57,21 @@ export async function canFetch(url: string){
 export async function fetchRenderedHtml(url: string){
   const browser = await chromium.launch({ headless: (process.env.HEADLESS||'true')==='true' });
   const page = await browser.newPage({ userAgent: UA });
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
-  await page.waitForTimeout(3000);
-  const html = await page.content();
-  const finalUrl = page.url();
-  await browser.close();
-  return { html, finalUrl };
+  
+  try {
+    // 'domcontentloaded' はページの基本構造が読み込まれた時点で完了
+    // 'networkidle' より早く、ほとんどのサイトで十分
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+    
+    // JavaScriptレンダリングを待つ（動的コンテンツ対応）
+    await page.waitForTimeout(3000);
+    
+    const html = await page.content();
+    const finalUrl = page.url();
+    await browser.close();
+    return { html, finalUrl };
+  } catch (error) {
+    await browser.close();
+    throw error;
+  }
 }

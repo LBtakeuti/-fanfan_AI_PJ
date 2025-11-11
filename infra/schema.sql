@@ -69,6 +69,9 @@ create policy "url_sources_write_admin" on public.url_sources for insert with ch
 create policy "url_sources_update_admin" on public.url_sources for update using (
   exists (select 1 from public.user_profiles p where p.user_id = auth.uid() and p.role in ('admin','editor'))
 );
+create policy "url_sources_delete_admin" on public.url_sources for delete using (
+  exists (select 1 from public.user_profiles p where p.user_id = auth.uid() and p.role in ('admin','editor'))
+);
 
 create policy "events_read" on public.events for select using (true);
 create policy "events_write_admin" on public.events for insert with check (

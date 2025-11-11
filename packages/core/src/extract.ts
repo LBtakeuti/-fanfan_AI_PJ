@@ -101,18 +101,26 @@ function sanitize(s:string){ return s.replace(/\s+/g,' ').replace(/[（）\(\)]/
 function toArray(x:any){ return Array.isArray(x)?x:(x?[x]:[]); }
 function venueSuffixRe(){ return /(ホール|ドーム|スタジアム|劇場|会館|シアター|アリーナ|フォーラム|センター|パシフィコ|Zepp|GARDEN|EX THEATER|BIGCAT|サンプラザ|クラブクアトロ)/i; }
 function labelRe(){ return /(会場|venue|開催場所)/i; }
+function noiseRe(){ return /^(day|open\s*\/\s*start|open|start|area|venue|info|schedule|topics)$/i; }
+function isNoiseLine(ln: string){
+  const normalized = ln.replace(/[:：\-]/g,'').trim();
+  if (!normalized) return true;
+  return noiseRe().test(normalized);
+}
 function findVenueNear(lines:string[], idx:number){
-  for (let j=0;j<=3;j++){
+  for (let j=0;j<=6;j++){
     const ln = (lines[idx+j]||'').trim();
     if (!ln) continue;
     if (labelRe().test(ln)) return ln.replace(labelRe(), '').replace(/[:：は\-]/g,'').trim();
     if (venueSuffixRe().test(ln)) return ln.trim();
+    if (isNoiseLine(ln)) continue;
   }
-  for (let j=1;j<=3;j++){
+  for (let j=1;j<=6;j++){
     const ln = (lines[idx-j]||'').trim();
     if (!ln) continue;
     if (labelRe().test(ln)) return ln.replace(labelRe(), '').replace(/[:：は\-]/g,'').trim();
     if (venueSuffixRe().test(ln)) return ln.trim();
+    if (isNoiseLine(ln)) continue;
   }
   return '';
 }
