@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(cd:*)",
+      "Bash(pnpm --filter @osikatsu-pro/admin install)",
+      "Bash(pnpm:*)",
+      "Bash(lsof:*)",
+      "Bash(PORT=4000 pnpm admin:dev)",
+      "Bash(npx -y @modelcontextprotocol/server-supabase --version)",
+      "Bash(node --version)",
+      "Bash(npm search @modelcontextprotocol)",
+      "WebSearch",
+      "mcp__supabase__execute_sql",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFeature: Enhanced UI/UX and data deduplication system\n\n- Improved admin dashboard with better styling and user experience\n- Enhanced event extraction page with CSV export templates (Tour/Genba/Performance masters)\n- Implemented data deduplication using checksum-based unique key system\n- Added fetcher improvements with rate limiting and robots.txt checks\n- Extended database schema with checksum column for duplicate detection\n- Added new components and utilities for admin UI\n- Updated dependencies and configurations\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "serena"
+  ]
+}
