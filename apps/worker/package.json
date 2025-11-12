@@ -1,0 +1,31 @@
+{
+  "name": "@osikatsu-pro/worker",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "tsx src/server.ts",
+    "server": "tsx src/server.ts",
+    "extract-api": "tsx src/extract-api.ts",
+    "run:url": "tsx src/run.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@osikatsu-pro/core": "workspace:*",
+    "@supabase/supabase-js": "*",
+    "cheerio": "*",
+    "dotenv": "*",
+    "fast-xml-parser": "*",
+    "node-ical": "*",
+    "pino": "*",
+    "playwright": "*",
+    "robots-parser": "*",
+    "undici": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5"
+  }
+}

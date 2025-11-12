@@ -1,0 +1,35 @@
+{
+  "name": "osikatsu-pro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "admin:dev": "pnpm --filter @osikatsu-pro/admin dev",
+    "admin:build": "pnpm --filter @osikatsu-pro/admin build",
+    "admin:start": "pnpm --filter @osikatsu-pro/admin start",
+    "worker:dev": "pnpm --filter @osikatsu-pro/worker dev",
+    "worker:server": "pnpm --filter @osikatsu-pro/worker server",
+    "worker:extract-api": "pnpm --filter @osikatsu-pro/worker extract-api",
+    "worker:url": "pnpm --filter @osikatsu-pro/worker run:url",
+    "core:build": "pnpm --filter @osikatsu-pro/core build",
+    "build": "pnpm run core:build && pnpm run admin:build && pnpm run worker:build",
+    "worker:build": "pnpm --filter @osikatsu-pro/worker build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm --filter @osikatsu-pro/core test",
+    "test:run": "pnpm --filter @osikatsu-pro/core test:run",
+    "install-deps": "pnpm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.18.2",
+  "devDependencies": {
+    "dotenv": "^17.2.3",
+    "pino": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "zod": "^4.1.12"
+  }
+}
