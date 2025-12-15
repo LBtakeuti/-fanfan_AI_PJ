@@ -7,6 +7,13 @@ const PORT = Number(process.env.PORT || '8080')
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url || '/', `http://${req.headers.host}`)
 
+  // Health check endpoint
+  if (u.pathname === '/' || u.pathname === '/health') {
+    res.writeHead(200, { 'content-type': 'application/json' })
+    res.end(JSON.stringify({ status: 'ok' }))
+    return
+  }
+
   if (u.pathname === '/run' && u.searchParams.get('url')) {
     const url = u.searchParams.get('url')!
     try {

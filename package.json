@@ -5,6 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "dev": "cp .env.local apps/admin/.env.local 2>/dev/null; cp .env.local apps/worker/.env.local 2>/dev/null; pnpm run --parallel admin:dev worker:server",
     "admin:dev": "pnpm --filter @osikatsu-pro/admin dev",
     "admin:build": "pnpm --filter @osikatsu-pro/admin build",
     "admin:start": "pnpm --filter @osikatsu-pro/admin start",
