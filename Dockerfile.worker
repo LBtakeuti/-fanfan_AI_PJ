@@ -26,7 +26,11 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy workspace files (cache bust v2)
+# Force cache invalidation
+ARG CACHEBUST=1
+RUN echo "Cache bust: $CACHEBUST"
+
+# Copy workspace files
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/core ./packages/core
 COPY apps/worker ./apps/worker
