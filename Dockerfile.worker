@@ -26,7 +26,7 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy workspace files
+# Copy workspace files (cache bust v2)
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/core ./packages/core
 COPY apps/worker ./apps/worker
