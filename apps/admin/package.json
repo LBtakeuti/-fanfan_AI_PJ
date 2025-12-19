@@ -13,7 +13,7 @@
     "@supabase/auth-helpers-nextjs": "*",
     "@supabase/supabase-js": "*",
     "csv-stringify": "*",
-    "next": "*",
+    "next": "^15.5.9",
     "pino": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
