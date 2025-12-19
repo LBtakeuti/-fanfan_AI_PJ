@@ -22,11 +22,11 @@
     "pino": "*",
     "playwright": "*",
     "robots-parser": "*",
+    "tsx": "^4.20.6",
     "undici": "*"
   },
   "devDependencies": {
     "@types/node": "^22",
-    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
