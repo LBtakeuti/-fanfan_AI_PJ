@@ -21,9 +21,13 @@ WORKDIR /app/apps/worker
 # Install Playwright browsers (chromium only for smaller image)
 RUN npx playwright install chromium
 
+# Verify tsx is installed
+RUN echo "Checking tsx..." && npx tsx --version
+
 EXPOSE 8080
 
 ENV PORT=8080
 ENV NODE_ENV=production
 
-CMD ["pnpm", "server"]
+# Use shell form for better debugging
+CMD echo "Starting server..." && echo "Node: $(node --version)" && echo "Files:" && ls -la src/ && npx tsx src/server.ts

@@ -1,18 +1,25 @@
 import 'dotenv/config'
 import http from 'http'
 
-console.log('Worker starting...')
+console.log('=== Worker Starting ===')
 console.log('Node version:', process.version)
 console.log('PORT:', process.env.PORT || '8080')
 
-let runOnce: any, extractOnly: any
-try {
-  const mod = require('./run')
-  runOnce = mod.runOnce
-  extractOnly = mod.extractOnly
-  console.log('Modules loaded successfully')
-} catch (e) {
-  console.error('Failed to load modules:', e)
+// Lazy load run module to prevent startup failures
+let runOnce: any = null
+let extractOnly: any = null
+
+const loadModules = async () => {
+  if (!runOnce) {
+    try {
+      const mod = await import('./run.js')
+      runOnce = mod.runOnce
+      extractOnly = mod.extractOnly
+      console.log('Run module loaded successfully')
+    } catch (e) {
+      console.error('Failed to load run module:', e)
+    }
+  }
 }
 
 const PORT = Number(process.env.PORT || '8080')
@@ -23,11 +30,19 @@ const server = http.createServer(async (req, res) => {
   // Health check endpoint
   if (u.pathname === '/' || u.pathname === '/health') {
     res.writeHead(200, { 'content-type': 'application/json' })
-    res.end(JSON.stringify({ status: 'ok' }))
+    res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }))
     return
   }
 
+  // Load modules on first real request
+  await loadModules()
+
   if (u.pathname === '/run' && u.searchParams.get('url')) {
+    if (!runOnce) {
+      res.writeHead(500, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ ok: false, error: 'Module not loaded' }))
+      return
+    }
     const url = u.searchParams.get('url')!
     try {
       const n = await runOnce(url)
@@ -41,6 +56,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (u.pathname === '/extract' && u.searchParams.get('url')) {
+    if (!extractOnly) {
+      res.writeHead(500, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ rows: [], error: 'Module not loaded' }))
+      return
+    }
     const url = u.searchParams.get('url')!
     const mode = u.searchParams.get('mode') || 'auto'
     try {
@@ -59,4 +79,7 @@ const server = http.createServer(async (req, res) => {
   res.end()
 })
 
-server.listen(PORT, () => console.log('worker listening on', PORT))
+server.listen(PORT, '0.0.0.0', () => {
+  console.log('=== Worker Ready ===')
+  console.log(`Listening on 0.0.0.0:${PORT}`)
+})
