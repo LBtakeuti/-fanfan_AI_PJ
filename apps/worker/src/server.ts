@@ -1,6 +1,19 @@
 import 'dotenv/config'
 import http from 'http'
-import { runOnce, extractOnly } from './run'
+
+console.log('Worker starting...')
+console.log('Node version:', process.version)
+console.log('PORT:', process.env.PORT || '8080')
+
+let runOnce: any, extractOnly: any
+try {
+  const mod = require('./run')
+  runOnce = mod.runOnce
+  extractOnly = mod.extractOnly
+  console.log('Modules loaded successfully')
+} catch (e) {
+  console.error('Failed to load modules:', e)
+}
 
 const PORT = Number(process.env.PORT || '8080')
 
