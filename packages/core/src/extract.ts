@@ -93,7 +93,7 @@ export function extractFromRss(xml: string): Candidate[] {
 function getBlocks($: cheerio.CheerioAPI){
   const sel = ['main','article','section','.content','.post','.entry','.detail'];
   const blocks: string[] = [];
-  sel.forEach(s => $(s).each((_,el)=> blocks.push($(el).text()) ));
+  sel.forEach(s => $(s).each((_,el)=> { blocks.push($(el).text()); }));
   if (blocks.length===0) blocks.push($('body').text());
   return blocks.map(t=>t.replace(/\u00a0/g,' '));
 }
