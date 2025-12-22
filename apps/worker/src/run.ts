@@ -8,10 +8,12 @@ import { fillRanges } from '@core/normalize';
 import { eventKey, checksum } from '@core/checksum';
 import { extractFromAi } from './extract-ai';
 
-// Load environment variables from .env files
-// .env.local takes precedence over .env
-dotenv.config({ path: path.join(process.cwd(), '.env') });
-dotenv.config({ path: path.join(process.cwd(), '.env.local'), override: true });
+// Load environment variables from .env files only in development
+// In production (Railway), env vars are already set
+if (!process.env.SUPABASE_URL) {
+  dotenv.config({ path: path.join(process.cwd(), '.env') });
+  dotenv.config({ path: path.join(process.cwd(), '.env.local'), override: true });
+}
 
 const log = pino({ name: 'worker' });
 const supabase = createClient(
