@@ -26,9 +26,11 @@ const PORT = Number(process.env.PORT || '8080')
 
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url || '/', `http://${req.headers.host}`)
+  console.log(`[${new Date().toISOString()}] ${req.method} ${u.pathname}`)
 
-  // Health check endpoint
+  // Health check endpoint - respond immediately
   if (u.pathname === '/' || u.pathname === '/health') {
+    console.log('Health check requested')
     res.writeHead(200, { 'content-type': 'application/json' })
     res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }))
     return
