@@ -1,8 +1,10 @@
 [build]
-dockerfilePath = "Dockerfile.worker"
+builder = "nixpacks"
+buildCommand = "pnpm install && pnpm --filter @osikatsu-pro/worker build"
 
 [deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 100
-restartPolicyType = "ON_FAILURE"
+startCommand = "pnpm --filter @osikatsu-pro/worker start"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
