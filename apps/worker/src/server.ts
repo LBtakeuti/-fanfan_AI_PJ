@@ -1,4 +1,7 @@
-import 'dotenv/config'
+// Only load dotenv in development (when SUPABASE_URL is not set)
+if (!process.env.SUPABASE_URL) {
+  require('dotenv/config')
+}
 import http from 'http'
 
 console.log('=== Worker Starting ===')
